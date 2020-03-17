@@ -27,7 +27,6 @@ import {getTeamMembersByIds, selectTeam} from 'mattermost-redux/actions/teams';
 import {getProfilesInChannel} from 'mattermost-redux/actions/users';
 import {Client4} from 'mattermost-redux/client';
 import {General, Preferences} from 'mattermost-redux/constants';
-import {getPostIdsInChannel} from 'mattermost-redux/selectors/entities/posts';
 import {
     getCurrentChannelId,
     getRedirectChannelNameForTeam,
@@ -184,7 +183,7 @@ export function loadPostsIfNecessaryWithRetry(channelId) {
         const results = await readPosts(channelId);
         const posts = Object.values(results);
 
-        console.log('DISPATCH RECEIVED_POSTS', channelId, posts.length)
+        console.log('DISPATCH RECEIVED_POSTS', channelId, posts.length); // eslint-disable-line no-console
         dispatch(receivedPosts({posts}));
 
         const state = getState();
@@ -192,10 +191,7 @@ export function loadPostsIfNecessaryWithRetry(channelId) {
         let loadMorePostsVisible = true;
 
         let postAction;
-        if (!posts.length) {
-            // Get the first page of posts if it appears we haven't gotten it yet, like the webapp
-            postAction = getPosts(channelId);
-        } else {
+        if (posts.length) {
             const lastConnectAt = state.websocket?.lastConnectAt || 0;
             const lastGetPosts = state.views.channel.lastGetPosts[channelId];
 
@@ -210,11 +206,14 @@ export function loadPostsIfNecessaryWithRetry(channelId) {
             }
 
             postAction = getPostsSince(channelId, since);
+        } else {
+            // Get the first page of posts if it appears we haven't gotten it yet, like the webapp
+            postAction = getPosts(channelId);
         }
 
         const received = await retryGetPostsAction(postAction, dispatch, getState);
 
-        let actions = [];
+        const actions = [];
         if (received) {
             actions.push({
                 type: ViewTypes.RECEIVED_POSTS_FOR_CHANNEL_AT_TIME,

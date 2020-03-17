@@ -1,3 +1,6 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
 import MMRealm from 'app/realm';
 
 export const writePosts = async (posts) => {
@@ -9,7 +12,7 @@ export const writePosts = async (posts) => {
 const createPost = (post) => {
     let properties = {...post};
     if (Object.keys(properties.metadata).length) {
-        metadata = {
+        const metadata = {
             ...properties.metadata,
             images: parseMetadataImages(properties.metadata.images),
             embeds: parseMetadataEmbeds(properties.metadata.embeds),
@@ -28,8 +31,8 @@ const createPost = (post) => {
     MMRealm.realm.write(() => {
         try {
             MMRealm.realm.create('Post', properties, true);
-        } catch(error) {
-            console.log('WRITE', error);
+        } catch (error) {
+            console.log('WRITE', error); // eslint-disable-line no-console
         }
     });
 };
@@ -47,7 +50,7 @@ const parseMetadataImages = (images = []) => {
 
 const parseMetadataEmbeds = (embeds = []) => {
     const parsedEmbeds = [];
-    for (i = 0; i < embeds.length; i++) {
+    for (let i = 0; i < embeds.length; i++) {
         if (embeds[i]) {
             let embed = {...embeds[i]};
 
@@ -66,7 +69,7 @@ const parseMetadataEmbeds = (embeds = []) => {
                         images,
                     },
                 };
-            } 
+            }
 
             parsedEmbeds.push(embed);
         }
@@ -81,4 +84,4 @@ const parseMetadataReactions = (reactions = []) => {
     }
 
     return reactions;
-} ;
+};

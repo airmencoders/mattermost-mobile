@@ -1,9 +1,12 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
 import * as PostActions from 'mattermost-redux/actions/posts';
 
 import {Client4} from 'mattermost-redux/client';
 import {Posts} from 'mattermost-redux/constants';
 import {PostTypes, UserTypes} from 'mattermost-redux/action_types';
-import {batchActions} from 'mattermost-redux/types/actions'
+import {batchActions} from 'mattermost-redux/types/actions';
 import {forceLogoutIfNecessary} from 'mattermost-redux/actions/helpers';
 import {getCurrentChannelId} from 'mattermost-redux/selectors/entities/common';
 import {logError} from 'mattermost-redux/actions/errors';
@@ -13,15 +16,14 @@ import {writePosts} from 'app/realm/writers/posts';
 
 import {getEmojisInPosts} from './emoji';
 
-PostActions.getPosts = function(channelId, page = 0, perPage = Posts.POST_CHUNK_SIZE) {
+PostActions.getPosts = (channelId, page = 0, perPage = Posts.POST_CHUNK_SIZE) => {
     return async (dispatch, getState) => {
         let data;
         try {
             data = await Client4.getPosts(channelId, page, perPage);
-        } catch(error) {
+        } catch (error) {
             return {error};
         }
-
 
         const state = getState();
         const currentChannelId = getCurrentChannelId(state);
@@ -46,16 +48,16 @@ PostActions.getPosts = function(channelId, page = 0, perPage = Posts.POST_CHUNK_
 
         return {data};
     };
-}
+};
 
-PostActions.getPostsSince = function(channelId, since) {
+PostActions.getPostsSince = (channelId, since) => {
     return async (dispatch, getState) => {
         let posts;
         try {
             posts = await Client4.getPostsSince(channelId, since);
             PostActions.getProfilesAndStatusesForPosts(posts.posts, dispatch, getState);
         } catch (error) {
-            console.log('getPostsSince error', error)
+            console.log('getPostsSince error', error); // eslint-disable-line no-console
             forceLogoutIfNecessary(error, dispatch, getState);
             dispatch(logError(error));
             return {error};
@@ -75,13 +77,13 @@ PostActions.getPostsSince = function(channelId, since) {
 
         return {data: posts};
     };
-}
+};
 
-PostActions.receivedPostsSinceSuccess = function() {
+PostActions.receivedPostsSinceSuccess = () => {
     return {
         type: PostTypes.GET_POSTS_SINCE_SUCCESS,
     };
-}
+};
 
 function getPostsAdditionalDataBatch(posts = []) {
     return async (dispatch, getState) => {
@@ -186,4 +188,4 @@ function profilesStatusesAndToLoadFromPosts(posts = []) {
     };
 }
 
-export * from 'mattermost-redux/actions/posts';
+export * from 'mattermost-redux/actions/posts'; // eslint-disable-line no-duplicate-imports

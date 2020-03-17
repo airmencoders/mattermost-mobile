@@ -1,3 +1,6 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
 export const PostSchema = {
     name: 'Post',
     primaryKey: 'id',
@@ -96,8 +99,8 @@ export const PostMetadataReactionSchema = {
         user_id: 'string',
         post_id: 'string',
         emoji_name: 'string',
-        create_at: 'int'
-    }
+        create_at: 'int',
+    },
 };
 
 export const PostMetadataEmbedSchema = {

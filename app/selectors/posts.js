@@ -3,14 +3,13 @@
 
 import {createSelector} from 'reselect';
 
-import * as PostSelectors from 'mattermost-redux/selectors/entities/posts';
+import * as PostSelectors from 'mattermost-redux/selectors/entities/posts'; // eslint-disable-line no-duplicate-imports
 
 import {getCurrentChannelId} from 'mattermost-redux/selectors/entities/channels';
-import {getAllPosts} from 'mattermost-redux/selectors/entities/posts';
 
 PostSelectors.getPostIdsInCurrentChannel = createSelector(
     getCurrentChannelId,
-    getAllPosts,
+    PostSelectors.getAllPosts,
     (currentChannelId, posts) => {
         let postIds = [];
 
@@ -20,7 +19,7 @@ PostSelectors.getPostIdsInCurrentChannel = createSelector(
         }
 
         return postIds;
-    }
+    },
 );
 
-export * from 'mattermost-redux/selectors/entities/posts';
+export * from 'mattermost-redux/selectors/entities/posts'; // eslint-disable-line no-duplicate-imports

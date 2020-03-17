@@ -430,28 +430,26 @@ function removePendingPost(pendingPostIds, id) {
 
 export function handlePostActions(store) {
     return (next) => async (action) => {
-        // console.log('->', action.type)
+        console.log('->', action.type); // eslint-disable-line no-console
         if (action.type === ChannelTypes.SELECT_CHANNEL) {
-            console.log('SELECTED CHANNEL', action.data);
+            console.log('SELECTED CHANNEL', action.data); // eslint-disable-line no-console
         }
 
         if (action.type === 'BATCHING_REDUCER.BATCH') {
-            for (i = 0; i < action.payload.length; i++) {
+            for (let i = 0; i < action.payload.length; i++) {
                 const actionType = action.payload[i].type;
 
                 if (actionType === PostTypes.RECEIVED_POSTS_IN_CHANNEL) {
-                    action.payload[i] = await handleReceivedPostsInChannel(store, action.payload[i]);
+                    action.payload[i] = await handleReceivedPostsInChannel(store, action.payload[i]); // eslint-disable-line no-await-in-loop
                 }
             }
-        } else {
-            if (action.type === PostTypes.RECEIVED_POSTS_IN_CHANNEL) {
-                nextAction = await handleReceivedPostsInChannel(store, action);
-                return next(nextAction);
-            }
+        } else if (action.type === PostTypes.RECEIVED_POSTS_IN_CHANNEL) {
+            const nextAction = await handleReceivedPostsInChannel(store, action);
+            return next(nextAction);
         }
 
         return next(action);
-    }
+    };
 }
 
 const handleReceivedPostsInChannel = async (store, action) => {
@@ -482,4 +480,4 @@ const handleReceivedPostsInChannel = async (store, action) => {
 
     action.type = 'NO_OP';
     return action;
-}
+};

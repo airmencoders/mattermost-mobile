@@ -1,14 +1,17 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
 import MMRealm from 'app/realm';
 
 export const readPosts = async (channelId) => {
     const posts = {};
 
     try {
-        const results = MMRealm.realm.objects('Post')
-            .filtered(`channel_id = "${channelId}"`)
-            .sorted([['create_at', true]]);
+        const results = MMRealm.realm.objects('Post').
+            filtered(`channel_id = "${channelId}"`).
+            sorted([['create_at', true]]);
 
-        for (let result of results) {
+        for (const result of results) {
             const post = JSON.parse(JSON.stringify(result));
 
             posts[post.id] = {
@@ -17,31 +20,30 @@ export const readPosts = async (channelId) => {
                 metadata: parseMetadata(post.metadata),
             };
         }
-    } catch(error) {
-        console.log('READ', error)
+    } catch (error) {
+        console.log('READ', error); // eslint-disable-line no-console
     }
 
     return posts;
 };
 
 export const readPostIds = async (channelId) => {
-    let postIds = [];
+    const postIds = [];
 
     try {
-        const results = MMRealm.realm.objects('Post')
-            .filtered(`channel_id = "${channelId}"`)
-            .sorted([['create_at', true]]);
+        const results = MMRealm.realm.objects('Post').
+            filtered(`channel_id = "${channelId}"`).
+            sorted([['create_at', true]]);
 
-        // postIds = results.map((result) => result.id);
-        for (let result of results) {
+        for (const result of results) {
             postIds.push(result.id);
         }
-    } catch(error) {
-        console.log('READ', error)
+    } catch (error) {
+        console.log('READ', error); // eslint-disable-line no-console
     }
 
     return postIds;
-}
+};
 
 const parseFileIds = (fileIds) => {
     if (fileIds && !Array.isArray(fileIds)) {
@@ -49,7 +51,7 @@ const parseFileIds = (fileIds) => {
     }
 
     return fileIds;
-}
+};
 
 const parseMetadata = (metadata) => {
     const parsedMetadata = {};
@@ -75,7 +77,7 @@ const parseMetadata = (metadata) => {
     }
 
     return parsedMetadata;
-}
+};
 
 const parseMetadataEmbeds = (embeds) => {
     if (embeds && !Array.isArray(embeds)) {
@@ -98,7 +100,7 @@ const parseMetadataEmbeds = (embeds) => {
     }
 
     return embeds;
-}
+};
 
 const parseMetadataFiles = (files) => {
     if (files && !Array.isArray(files)) {
@@ -106,7 +108,7 @@ const parseMetadataFiles = (files) => {
     }
 
     return files;
-}
+};
 
 const parseMetadataEmojis = (emojis) => {
     if (emojis && !Array.isArray(emojis)) {
@@ -114,17 +116,17 @@ const parseMetadataEmojis = (emojis) => {
     }
 
     return emojis;
-}
+};
 
 const parseMetadataImages = (images) => {
     if (images && Array.isArray(images)) {
-        parsedImages = {};
-        post.metadata.images.forEach((image) => {
-            images[image.url] = images;
+        const parsedImages = {};
+        images.forEach((image) => {
+            parsedImages[image.url] = image;
         });
 
         return parsedImages;
     }
 
     return images;
-}
+};

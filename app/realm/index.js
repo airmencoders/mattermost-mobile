@@ -1,3 +1,6 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
 import Realm from 'realm';
 
 import {
@@ -32,7 +35,7 @@ class MMRealm {
             const config = {
                 path: `mmtest-${Date.now()}.realm`, // should be server URL
                 schema: postSchemas,
-            }
+            };
 
             this.realm = await Realm.open(config);
         }
