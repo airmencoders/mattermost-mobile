@@ -7,9 +7,7 @@ import {Client4} from 'mattermost-redux/client';
 import {Posts} from 'mattermost-redux/constants';
 import {PostTypes, UserTypes} from 'mattermost-redux/action_types';
 import {batchActions} from 'mattermost-redux/types/actions';
-import {forceLogoutIfNecessary} from 'mattermost-redux/actions/helpers';
 import {getCurrentChannelId} from 'mattermost-redux/selectors/entities/common';
-import {logError} from 'mattermost-redux/actions/errors';
 import {removeUserFromList} from 'mattermost-redux/utils/user_utils';
 
 import {writePosts} from 'app/realm/writers/posts';
@@ -52,30 +50,35 @@ PostActions.getPosts = (channelId, page = 0, perPage = Posts.POST_CHUNK_SIZE) =>
 
 PostActions.getPostsSince = (channelId, since) => {
     return async (dispatch, getState) => {
-        let posts;
+        let data;
         try {
-            posts = await Client4.getPostsSince(channelId, since);
-            PostActions.getProfilesAndStatusesForPosts(posts.posts, dispatch, getState);
+            data = await Client4.getPostsSince(channelId, since);
         } catch (error) {
-            console.log('getPostsSince error', error); // eslint-disable-line no-console
-            forceLogoutIfNecessary(error, dispatch, getState);
-            dispatch(logError(error));
             return {error};
         }
 
-        writePosts(posts.posts);
-
         const state = getState();
         const currentChannelId = getCurrentChannelId(state);
-        if (channelId === currentChannelId) {
-            dispatch(batchActions([
-                PostActions.receivedPosts(posts),
-                PostActions.receivedPostsSince(posts, channelId),
-                PostActions.receivedPostsSinceSuccess(),
-            ]));
+        const posts = Object.values(data.posts);
+        if (posts.length) {
+            writePosts(posts);
+
+            if (channelId === currentChannelId) {
+                const actions = [
+                    PostActions.receivedPosts(data),
+                    PostActions.receivedPostsSince(data, channelId),
+                ];
+
+                const additional = await dispatch(getPostsAdditionalDataBatch(posts));
+                if (additional.length) {
+                    actions.push(...additional);
+                }
+
+                dispatch(batchActions(actions));
+            }
         }
 
-        return {data: posts};
+        return {data};
     };
 };
 
