@@ -106,8 +106,7 @@ def enableSeparateBuildPerCPUArchitecture = false
  */
 def enableProguardInReleaseBuilds = false
 
-// Add v8-android - prebuilt libv8android.so into APK
-def jscFlavor = 'org.chromium:v8-android:+'
+def jscFlavor = 'org.webkit:android-jsc-intl:r241213'
 
 /**
  * Whether to enable the Hermes VM.
@@ -189,11 +188,6 @@ android {
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8
-    }
-
-    packagingOptions {
-        // Make sure libjsc.so does not packed in APK
-        exclude "**/libjsc.so"
     }
 }
 
