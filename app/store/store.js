@@ -21,7 +21,7 @@ import {createSentryMiddleware} from 'app/utils/sentry/middleware';
 
 import mattermostBucket from 'app/mattermost_bucket';
 
-import {messageRetention} from './middleware';
+import {messageRetention, handlePostActions} from './middleware';
 import {createThunkMiddleware} from './thunk';
 import {transformSet, getStateForReset} from './utils';
 
@@ -274,6 +274,7 @@ export default function configureAppStore(initialState) {
             createThunkMiddleware(),
             createSentryMiddleware(),
             messageRetention,
+            handlePostActions,
         ],
         enableThunk: false, // We override the default thunk middleware
     };

@@ -18,6 +18,7 @@ import {
     getPostsBefore,
     getPostsSince,
     getPostThread,
+    receivedPosts,
 } from 'mattermost-redux/actions/posts';
 import {getFilesForPost} from 'mattermost-redux/actions/files';
 import {savePreferences} from 'mattermost-redux/actions/preferences';
@@ -57,6 +58,8 @@ import {isDirectChannelVisible, isGroupChannelVisible, isDirectMessageVisible, i
 import {buildPreference} from 'app/utils/preferences';
 
 import {forceLogoutIfNecessary} from './user';
+
+import {readPosts} from 'app/realm/readers/posts';
 
 const MAX_RETRIES = 3;
 
@@ -178,16 +181,18 @@ export function loadProfilesAndTeamMembersForDMSidebar(teamId) {
 
 export function loadPostsIfNecessaryWithRetry(channelId) {
     return async (dispatch, getState) => {
+        const results = await readPosts(channelId);
+        const posts = Object.values(results);
+
+        console.log('DISPATCH RECEIVED_POSTS', channelId, posts.length)
+        dispatch(receivedPosts({posts}));
+
         const state = getState();
-        const {posts} = state.entities.posts;
-        const postsIds = getPostIdsInChannel(state, channelId);
-        const actions = [];
-
         const time = Date.now();
-
         let loadMorePostsVisible = true;
+
         let postAction;
-        if (!postsIds || postsIds.length < ViewTypes.POST_VISIBILITY_CHUNK_SIZE) {
+        if (!posts.length) {
             // Get the first page of posts if it appears we haven't gotten it yet, like the webapp
             postAction = getPosts(channelId);
         } else {
@@ -201,8 +206,7 @@ export function loadPostsIfNecessaryWithRetry(channelId) {
             } else {
                 // Trust that we've received all posts since the last time the websocket disconnected
                 // so just get any that have changed since the latest one we've received
-                const postsForChannel = postsIds.map((id) => posts[id]);
-                since = getLastCreateAt(postsForChannel);
+                since = getLastCreateAt(posts);
             }
 
             postAction = getPostsSince(channelId, since);
@@ -210,6 +214,7 @@ export function loadPostsIfNecessaryWithRetry(channelId) {
 
         const received = await retryGetPostsAction(postAction, dispatch, getState);
 
+        let actions = [];
         if (received) {
             actions.push({
                 type: ViewTypes.RECEIVED_POSTS_FOR_CHANNEL_AT_TIME,

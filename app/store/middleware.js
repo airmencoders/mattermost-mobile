@@ -3,6 +3,8 @@
 
 import DeviceInfo from 'react-native-device-info';
 
+import {PostTypes, ChannelTypes} from 'mattermost-redux/action_types';
+
 import {ViewTypes} from 'app/constants';
 import initialState from 'app/initial_state';
 
@@ -424,4 +426,60 @@ function removePendingPost(pendingPostIds, id) {
     if (pendingIndex !== -1) {
         pendingPostIds.splice(pendingIndex, 1);
     }
+}
+
+export function handlePostActions(store) {
+    return (next) => async (action) => {
+        // console.log('->', action.type)
+        if (action.type === ChannelTypes.SELECT_CHANNEL) {
+            console.log('SELECTED CHANNEL', action.data);
+        }
+
+        if (action.type === 'BATCHING_REDUCER.BATCH') {
+            for (i = 0; i < action.payload.length; i++) {
+                const actionType = action.payload[i].type;
+
+                if (actionType === PostTypes.RECEIVED_POSTS_IN_CHANNEL) {
+                    action.payload[i] = await handleReceivedPostsInChannel(store, action.payload[i]);
+                }
+            }
+        } else {
+            if (action.type === PostTypes.RECEIVED_POSTS_IN_CHANNEL) {
+                nextAction = await handleReceivedPostsInChannel(store, action);
+                return next(nextAction);
+            }
+        }
+
+        return next(action);
+    }
+}
+
+const handleReceivedPostsInChannel = async (store, action) => {
+    // const posts = Object.values(action.data.posts);
+    // console.log('DISPATCHED RECEIVED_POSTS_IN_CHANNEL:', posts.length);
+    // writePosts(posts);
+
+    // console.log('RECEIVED_POSTS_IN_CHANNEL',
+    //     `wrote ${posts.length} posts for ${posts[0] && posts[0].channel_id}`);
+
+    // const post = posts[0];
+    // if (post) {
+    //     const {channel_id: channelId} = post;
+    //     const currentChannelId = getCurrentChannelId(store.getState());
+    //     if (channelId === currentChannelId) {
+    //         action.data.posts = await readPosts(channelId);
+
+    //         const read = Object.values(action.data.posts);
+    //         console.log('RECEIVED_POSTS_IN_CHANNEL',
+    //             `read ${Object.keys(read).length} posts for ${read[0] && read[0].channel_id}`);
+    //     } else {
+    //         console.log('RECEIVED_POSTS_IN_CHANNEL', 'NO_OP\'d');
+    //         action.type = 'NO_OP';
+    //     }
+    // }
+
+    // console.log('-----');
+
+    action.type = 'NO_OP';
+    return action;
 }

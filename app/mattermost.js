@@ -16,6 +16,7 @@ import {getAppCredentials} from 'app/init/credentials';
 import emmProvider from 'app/init/emm_provider';
 import 'app/init/device';
 import 'app/init/fetch';
+import 'app/init/overrides';
 import globalEventHandler from 'app/init/global_event_handler';
 import {registerScreens} from 'app/screens';
 import store from 'app/store';
@@ -24,7 +25,11 @@ import EphemeralStore from 'app/store/ephemeral_store';
 import telemetry from 'app/telemetry';
 import pushNotificationsUtils from 'app/utils/push_notifications';
 
+import Realm from 'app/realm';
+
 const init = async () => {
+    Realm.init();
+
     const credentials = await getAppCredentials();
     if (EphemeralStore.appStarted) {
         launchApp(credentials);
