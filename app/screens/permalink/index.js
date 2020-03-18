@@ -15,13 +15,13 @@ import {makeGetPostIdsAroundPost, getPost} from 'mattermost-redux/selectors/enti
 import {getTheme} from 'mattermost-redux/selectors/entities/preferences';
 import {getCurrentTeamId} from 'mattermost-redux/selectors/entities/teams';
 import {getCurrentUserId} from 'mattermost-redux/selectors/entities/users';
-import {isLandscape} from 'app/selectors/device';
 
 import {
     handleSelectChannel,
     loadThreadIfNecessary,
 } from 'app/actions/views/channel';
 import {handleTeamChange} from 'app/actions/views/select_team';
+import {isLandscape} from 'app/selectors/device';
 
 import Permalink from './permalink';
 

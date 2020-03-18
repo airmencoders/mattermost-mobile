@@ -10,9 +10,8 @@ import {batchActions} from 'mattermost-redux/types/actions';
 import {getCurrentChannelId} from 'mattermost-redux/selectors/entities/common';
 import {removeUserFromList} from 'mattermost-redux/utils/user_utils';
 
+import {getEmojisInPosts} from 'app/actions/views/emoji';
 import {writePosts} from 'app/realm/writers/posts';
-
-import {getEmojisInPosts} from './emojis';
 
 PostActions.getPosts = (channelId, page = 0, perPage = Posts.POST_CHUNK_SIZE) => {
     return async (dispatch, getState) => {

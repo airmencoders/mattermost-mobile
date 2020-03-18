@@ -385,8 +385,9 @@ DEPENDENCIES:
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  https://github.com/cocoapods/specs.git:
     - boost-for-react-native
+    - GCDWebServer
     - libwebp
     - SDWebImage
     - SDWebImageWebPCoder
@@ -394,8 +395,6 @@ SPEC REPOS:
     - Swime
     - XCDYouTubeKit
     - YoutubePlayer-in-WKWebView
-  trunk:
-    - GCDWebServer
 
 EXTERNAL SOURCES:
   BVLinearGradient:
@@ -526,11 +525,11 @@ SPEC CHECKSUMS:
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
   jail-monkey: 8eb1b5d4ab5f2a55937dd123e6450cbbff0c8032
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
-  Permission-Camera: 8fe4753b02396489b11c5089e4f57bab7fe1ef42
-  Permission-PhotoLibrary: 42d41b53adefcfa94f42fb628f143d97136120bd
+  Permission-Camera: b0fec577b27488314a885f9c74433e02f3585b9b
+  Permission-PhotoLibrary: 51718ddf8c0baf1cebf323c68cedcb2ff0cf304a
   RCTRequired: b153add4da6e7dbc44aebf93f3cf4fcae392ddf1
   RCTTypeSafety: 9aa1b91d7f9310fc6eadc3cf95126ffe818af320
-  RCTYouTube: 57458fe8653bb696b7d7585326d735d01b871af8
+  RCTYouTube: 5e94bfa005371c41d307f3f93c51b3e8eabfb0c8
   React: b6a59ef847b2b40bb6e0180a97d0ca716969ac78
   React-Core: 688b451f7d616cc1134ac95295b593d1b5158a04
   React-CoreModules: d04f8494c1a328b69ec11db9d1137d667f916dcb
@@ -538,18 +537,18 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
-  react-native-cameraroll: 463aff54e37cff27ea76eb792e6f1fa43b876320
+  react-native-cameraroll: ad20f5a93c25cb83a76455df57a2c62fbb63aaed
   react-native-cookies: 854d59c4135c70b92a02ca4930e68e4e2eb58150
   react-native-document-picker: c36bf5f067a581657ecaf7124dcd921a8be19061
   react-native-hw-keyboard-event: b517cefb8d5c659a38049c582de85ff43337dc53
-  react-native-image-picker: a878ed6ac8c54ec4f5d7ab7a019c7b5eb7a737d4
-  react-native-local-auth: 970d61955fd1f2327387c61156e5f26bfe969ec5
-  react-native-netinfo: 6bb847e64f45a2d69c6173741111cfd95c669301
-  react-native-notifications: 163ddedac6fcc8d850ea15b06abdadcacdff00f1
-  react-native-passcode-status: e78f76b3c8db613e6ced6bd40b54aa4f53374173
+  react-native-image-picker: ba7fe85b3373ff33d4827210d989dfcbbd68f7f9
+  react-native-local-auth: 5081a70211643de74bb207e007401a0c81b37a20
+  react-native-netinfo: 892a5130be97ff8bb69c523739c424a2ffc296d1
+  react-native-notifications: d5cb54ef8bf3004dcb56c887650dea08ecbddee7
+  react-native-passcode-status: 88c4f6e074328bc278bd127646b6c694ad5a530a
   react-native-safe-area: e8230b0017d76c00de6b01e2412dcf86b127c6a3
-  react-native-video: d01ed7ff1e38fa7dcc6c15c94cf505e661b7bfd0
-  react-native-webview: 01d415811b3b18c925399b22cc3a6355afc7d7a4
+  react-native-video: 961749da457e73bf0b5565edfbaffc25abfb8974
+  react-native-webview: 0d1c2b4e7ffb0543a74fa0512f2f8dc5fb0e49e2
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
   React-RCTBlob: d89293cc0236d9cb0933d85e430b0bbe81ad1d72
@@ -565,12 +564,12 @@ SPEC CHECKSUMS:
   ReactNativeNavigation: 8f781c932c53011889d4952c90589e22d982dbb3
   RealmJS: 93647ef6552a313242a3ebf5ce1a1a09271b5a2a
   rn-fetch-blob: 17961aec08caae68bb8fc0e5b40f93b3acfa6932
-  RNCAsyncStorage: 44395cb9c7c1523104c2b499eb426ef7aff82bca
-  RNDeviceInfo: 75dac2d7cd6b638b512cc9266ce48a39661fed0e
+  RNCAsyncStorage: 8539fc80a0075fcc9c8e2dff84cd22dc5bf1dacf
+  RNDeviceInfo: fd8296de6fca8b743cdc499b896f48e8a9f1faf5
   RNFastImage: 9b0c22643872bb7494c8d87bbbb66cc4c0d9e7a2
   RNGestureHandler: 02905abe54e1f6e59c081a10b4bd689721e17aa6
   RNKeychain: 840f8e6f13be0576202aefcdffd26a4f54bfe7b5
-  RNPermissions: 2f74237e97b08beda01e914301e12524ddddf5b8
+  RNPermissions: 6db7e0a4d94c9c02390d11020b1d3d187aaf77e5
   RNReactNativeDocViewer: 571c6ac38483531b8fb521d02a6ba54652ed10a7
   RNReactNativeHapticFeedback: e11a4da0ce174e9f88b03cbaf5d76d94633cdee2
   RNSentry: 9b1d983b2d5d1c215ba6490348fd2a4cc23a8a9d
