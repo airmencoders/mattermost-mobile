@@ -12,7 +12,7 @@ import {removeUserFromList} from 'mattermost-redux/utils/user_utils';
 
 import {writePosts} from 'app/realm/writers/posts';
 
-import {getEmojisInPosts} from './emoji';
+import {getEmojisInPosts} from './emojis';
 
 PostActions.getPosts = (channelId, page = 0, perPage = Posts.POST_CHUNK_SIZE) => {
     return async (dispatch, getState) => {
@@ -23,11 +23,12 @@ PostActions.getPosts = (channelId, page = 0, perPage = Posts.POST_CHUNK_SIZE) =>
             return {error};
         }
 
-        const state = getState();
-        const currentChannelId = getCurrentChannelId(state);
         const posts = Object.values(data.posts);
         if (posts.length) {
             writePosts(posts);
+
+            const state = getState();
+            const currentChannelId = getCurrentChannelId(state);
 
             if (channelId === currentChannelId) {
                 const actions = [
@@ -57,16 +58,145 @@ PostActions.getPostsSince = (channelId, since) => {
             return {error};
         }
 
-        const state = getState();
-        const currentChannelId = getCurrentChannelId(state);
         const posts = Object.values(data.posts);
         if (posts.length) {
             writePosts(posts);
+
+            const state = getState();
+            const currentChannelId = getCurrentChannelId(state);
 
             if (channelId === currentChannelId) {
                 const actions = [
                     PostActions.receivedPosts(data),
                     PostActions.receivedPostsSince(data, channelId),
+                ];
+
+                const additional = await dispatch(getPostsAdditionalDataBatch(posts));
+                if (additional.length) {
+                    actions.push(...additional);
+                }
+
+                dispatch(batchActions(actions));
+            }
+        }
+
+        return {data};
+    };
+};
+
+PostActions.getPostsBefore = (channelId, postId, page = 0, perPage = Posts.POST_CHUNK_SIZE) => {
+    return async (dispatch, getState) => {
+        let data;
+        try {
+            data = await Client4.getPostsBefore(channelId, postId, page, perPage);
+        } catch (error) {
+            return {error};
+        }
+
+        const posts = Object.values(data.posts);
+        if (posts.length) {
+            writePosts(posts);
+
+            const state = getState();
+            const currentChannelId = getCurrentChannelId(state);
+
+            if (channelId === currentChannelId) {
+                const actions = [
+                    PostActions.receivedPosts(data),
+                    PostActions.receivedPostsBefore(data, channelId, postId, data.prev_post_id === ''),
+                ];
+
+                const additional = await dispatch(getPostsAdditionalDataBatch(posts));
+                if (additional.length) {
+                    actions.push(...additional);
+                }
+
+                dispatch(batchActions(actions));
+            }
+        }
+
+        return {data};
+    };
+};
+
+PostActions.getPostsAround = (channelId, postId, perPage = Posts.POST_CHUNK_SIZE / 2) => {
+    return async (dispatch, getState) => {
+        let data;
+        let before;
+        let thread;
+        let after;
+        try {
+            [before, thread, after] = await Promise.all([
+                Client4.getPostsBefore(channelId, postId, 0, perPage),
+                Client4.getPostThread(postId),
+                Client4.getPostsAfter(channelId, postId, 0, perPage),
+            ]);
+
+            data = {
+                posts: {
+                    ...after.posts,
+                    ...thread.posts,
+                    ...before.posts,
+                },
+                order: [
+                    ...after.order,
+                    postId,
+                    ...before.order,
+                ],
+                next_post_id: after.next_post_id,
+                prev_post_id: before.prev_post_id,
+            };
+        } catch (error) {
+            return {error};
+        }
+
+        const posts = Object.values(data.posts);
+        if (posts.length) {
+            writePosts(posts);
+
+            const state = getState();
+            const currentChannelId = getCurrentChannelId(state);
+
+            if (channelId === currentChannelId) {
+                const actions = [
+                    PostActions.receivedPosts(data),
+                    PostActions.receivedPostsInChannel(data, channelId, after.next_post_id === '', before.prev_post_id === ''),
+                ];
+
+                const additional = await dispatch(getPostsAdditionalDataBatch(posts));
+                if (additional.length) {
+                    actions.push(...additional);
+                }
+
+                dispatch(batchActions(actions));
+            }
+        }
+
+        return {data};
+    };
+};
+
+PostActions.getPostThread = (rootId) => {
+    return async (dispatch, getState) => {
+        let data;
+        try {
+            data = await Client4.getPostThread(rootId);
+        } catch (error) {
+            return {error};
+        }
+
+        const posts = Object.values(data.posts);
+        if (posts.length) {
+            writePosts(posts);
+
+            const state = getState();
+            const currentChannelId = getCurrentChannelId(state);
+            const channelId = posts[0].channel_id;
+
+            if (channelId === currentChannelId) {
+                const actions = [
+                    PostActions.receivedPosts(data),
+                    PostActions.receivedPostsInThread(data, rootId),
                 ];
 
                 const additional = await dispatch(getPostsAdditionalDataBatch(posts));

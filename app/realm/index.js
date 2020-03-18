@@ -14,7 +14,7 @@ import {
     PostMetadataEmbedSchema,
     PostMetadataEmbedDataSchema,
     PostMetadataEmbedDataImageSchema,
-} from 'app/realm/schemas/Post';
+} from 'app/realm/schemas/Posts';
 
 const postSchemas = [
     PostSchema,
