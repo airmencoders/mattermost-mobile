@@ -298,6 +298,8 @@ PODS:
     - React
   - RNReactNativeHapticFeedback (1.8.2):
     - React
+  - RNScreens (2.3.0):
+    - React
   - RNSentry (1.2.1):
     - React
     - Sentry (~> 4.4.0)
@@ -377,6 +379,7 @@ DEPENDENCIES:
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReactNativeDocViewer (from `../node_modules/react-native-doc-viewer`)
   - RNReactNativeHapticFeedback (from `../node_modules/react-native-haptic-feedback`)
+  - RNScreens (from `../node_modules/react-native-screens`)
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
@@ -505,6 +508,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-doc-viewer"
   RNReactNativeHapticFeedback:
     :path: "../node_modules/react-native-haptic-feedback"
+  RNScreens:
+    :path: "../node_modules/react-native-screens"
   RNSentry:
     :path: "../node_modules/@sentry/react-native"
   RNSVG:
@@ -572,6 +577,7 @@ SPEC CHECKSUMS:
   RNPermissions: 6db7e0a4d94c9c02390d11020b1d3d187aaf77e5
   RNReactNativeDocViewer: 571c6ac38483531b8fb521d02a6ba54652ed10a7
   RNReactNativeHapticFeedback: e11a4da0ce174e9f88b03cbaf5d76d94633cdee2
+  RNScreens: 03bf608b92ac0acf323f47d8f5b63a8f829340c8
   RNSentry: 9b1d983b2d5d1c215ba6490348fd2a4cc23a8a9d
   RNSVG: 069864be08c9fe065a2cf7e63656a34c78653c99
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
